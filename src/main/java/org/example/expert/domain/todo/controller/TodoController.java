@@ -34,6 +34,7 @@ public class TodoController {
         @RequestParam(defaultValue = "10") int size,
         @ModelAttribute TodoFindCond cond
     ) {
+
         return ResponseEntity.ok(
             todoService.getTodos(
                 page, size,
