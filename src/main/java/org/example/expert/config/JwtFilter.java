@@ -47,6 +47,8 @@ public class JwtFilter implements Filter {
 
         String jwt = jwtUtil.substringToken(bearerJwt);
 
+        System.out.println(jwt);
+
         try {
             // JWT 유효성 검사와 claims 추출
             Claims claims = jwtUtil.extractClaims(jwt);
