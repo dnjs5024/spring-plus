@@ -6,8 +6,10 @@ import lombok.Getter;
 public class SigninResponse {
 
     private final String userName;
+    private final String bearerToken;
 
-    public SigninResponse(String userName) {
+    public SigninResponse(String bearerToken, String userName) {
+        this.bearerToken = bearerToken;
         this.userName = userName;
     }
 }

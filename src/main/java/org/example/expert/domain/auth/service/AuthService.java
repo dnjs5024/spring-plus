@@ -64,6 +64,6 @@ public class AuthService {
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserName(),
             user.getUserRole());
         String token = bearerToken.split(" ")[1]; // Bearer 토큰 형식으로 반환되서 잘라서 토큰만 전달
-        return new SigninResponse( (String) jwtUtil.extractClaims(token).get("userName"));
+        return new SigninResponse(bearerToken, (String) jwtUtil.extractClaims(token).get("userName"));
     }
 }
