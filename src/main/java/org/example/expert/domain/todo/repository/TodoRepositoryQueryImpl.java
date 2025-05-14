@@ -16,6 +16,7 @@ import static org.example.expert.domain.manager.entity.QManager.manager;
 
 import org.example.expert.domain.todo.dto.TodoFindCond;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
+import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
 import org.example.expert.domain.todo.entity.Todo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,13 +39,14 @@ public class TodoRepositoryQueryImpl implements TodoRepositoryQuery {
     }
 
     @Override
-    public Page<TodoResponse> searchTodos(Pageable pageable, TodoFindCond cond) {
+    public Page<TodoSearchResponse> searchTodos(Pageable pageable, TodoFindCond cond) {
         //동적쿼리생성
         BooleanBuilder builder = new BooleanBuilder();
         if (cond.getType() != null  && cond.getKeyword() != null) {
             switch (cond.getType()) {
                 case TITLE:
                     builder.and(todo.title.contains(cond.getKeyword())); // contains 는 Like %% 와 같음
+                    System.out.println("Keyword: " + cond.getKeyword());
                     break;
                 case NICKNAME:
                     builder.and(todo.user.userName.contains(cond.getKeyword()));
@@ -54,8 +56,8 @@ public class TodoRepositoryQueryImpl implements TodoRepositoryQuery {
         if (cond.getStartAt() != null && cond.getEndAt() != null) {
             builder.and(todo.createdAt.between(cond.getStartAt(), cond.getEndAt()));
         }
-        List<TodoResponse> content = jpaQueryFactory.select(Projections.fields(
-                    TodoResponse.class,
+        List<TodoSearchResponse> content = jpaQueryFactory.select(Projections.constructor(
+                TodoSearchResponse.class,
                     todo.title,
                     ExpressionUtils.as(
                         JPAExpressions.select(manager.count()).from(manager) // 매니저 수

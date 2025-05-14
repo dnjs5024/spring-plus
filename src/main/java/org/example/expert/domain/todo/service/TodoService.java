@@ -9,6 +9,7 @@ import org.example.expert.domain.todo.dto.TodoFindCond;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.TodoSearchResponse;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.todo.repository.TodoRepositoryQueryImpl;
@@ -95,8 +96,7 @@ public class TodoService {
         );
     }
 
-    public Page<TodoResponse> searchTodos(int page, int size, TodoFindCond cond) {
-        todoRepositoryQuery.searchTodos(PageRequest.of(page, size), cond);
-        return null;
+    public Page<TodoSearchResponse> searchTodos(int page, int size, TodoFindCond cond) {
+        return todoRepositoryQuery.searchTodos(PageRequest.of(page-1, size), cond);
     }
 }
