@@ -1,9 +1,7 @@
 package org.example.expert.domain.auth.service;
 
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.config.JwtUtil;
-import org.example.expert.config.PasswordEncoder;
 import org.example.expert.domain.auth.dto.request.SigninRequest;
 import org.example.expert.domain.auth.dto.request.SignupRequest;
 import org.example.expert.domain.auth.dto.response.SigninResponse;
@@ -13,6 +11,9 @@ import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.enums.UserRole;
 import org.example.expert.domain.user.repository.UserRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +49,8 @@ public class AuthService {
             savedUser.getUserName(),
             userRole);
 
-        String token = bearerToken.split(" ")[1]; // Bearer 토큰 형식으로 반환되서 잘라서 토큰만 전달
+        String token =  jwtUtil.substringToken(bearerToken);; // Bearer 토큰 형식으로 반환되서 잘라서 토큰만 전달
+
         return new SignupResponse( (String) jwtUtil.extractClaims(token).get("userName"));
     }
 
@@ -63,7 +65,8 @@ public class AuthService {
 
         String bearerToken = jwtUtil.createToken(user.getId(), user.getEmail(), user.getUserName(),
             user.getUserRole());
-        String token = bearerToken.split(" ")[1]; // Bearer 토큰 형식으로 반환되서 잘라서 토큰만 전달
+        String token =  jwtUtil.substringToken(bearerToken);; // Bearer 토큰 형식으로 반환되서 잘라서 토큰만 전달
+
         return new SigninResponse(bearerToken, (String) jwtUtil.extractClaims(token).get("userName"));
     }
 }
