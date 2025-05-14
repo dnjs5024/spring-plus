@@ -21,7 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.method.support.CompositeUriComponentsContributor;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -29,8 +29,6 @@ import org.springframework.web.method.support.CompositeUriComponentsContributor;
 public class TodoRepositoryQueryImpl implements TodoRepositoryQuery {
 
     private final JPAQueryFactory jpaQueryFactory;
-    private final TodoRepository todoRepository;
-    private final CompositeUriComponentsContributor compositeUriComponentsContributor;
 
     @Override
     public Optional<Todo> findByIdWithUser(Long todoId) {

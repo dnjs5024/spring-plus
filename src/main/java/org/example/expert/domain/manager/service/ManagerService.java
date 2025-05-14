@@ -1,12 +1,15 @@
 package org.example.expert.domain.manager.service;
 
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
 import org.example.expert.domain.manager.dto.request.ManagerSaveRequest;
 import org.example.expert.domain.manager.dto.response.ManagerResponse;
 import org.example.expert.domain.manager.dto.response.ManagerSaveResponse;
+import org.example.expert.domain.manager.entity.Log;
 import org.example.expert.domain.manager.entity.Manager;
+import org.example.expert.domain.manager.repository.ManageLogRepository;
 import org.example.expert.domain.manager.repository.ManagerRepository;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
@@ -14,6 +17,7 @@ import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
@@ -26,11 +30,12 @@ import java.util.List;
 public class ManagerService {
 
     private final ManagerRepository managerRepository;
+    private final ManageLogRepository logRepository;
     private final UserRepository userRepository;
     private final TodoRepository todoRepository;
 
     @Transactional
-    public ManagerSaveResponse saveManager(AuthUser authUser, long todoId, ManagerSaveRequest managerSaveRequest) {
+    public ManagerSaveResponse saveLog(AuthUser authUser, long todoId, ManagerSaveRequest managerSaveRequest) {
         // 일정을 만든 유저
         User user = User.fromAuthUser(authUser);
         Todo todo = todoRepository.findById(todoId)
@@ -54,6 +59,18 @@ public class ManagerService {
                 savedManagerUser.getId(),
                 new UserResponse(managerUser.getId(), managerUser.getEmail())
         );
+    }
+
+    /**
+     * 매니저 등록 요청 로그 저장
+     * @param requestUrl
+     * @param userId
+     * @param currentTime
+     * @param methodNam
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveLog(String requestUrl, Long userId, LocalDateTime currentTime, String methodNam, boolean isSave) {
+        logRepository.save(Log.of(requestUrl,userId,currentTime,methodNam,isSave));
     }
 
     public List<ManagerResponse> getManagers(long todoId) {
@@ -93,4 +110,6 @@ public class ManagerService {
 
         managerRepository.delete(manager);
     }
+
+
 }
