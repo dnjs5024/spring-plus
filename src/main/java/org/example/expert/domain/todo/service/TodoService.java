@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.client.WeatherClient;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.todo.dto.TodoFindCond;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
@@ -34,19 +35,19 @@ public class TodoService {
         String weather = weatherClient.getTodayWeather();
 
         Todo newTodo = new Todo(
-                todoSaveRequest.getTitle(),
-                todoSaveRequest.getContents(),
-                weather,
-                user
+            todoSaveRequest.getTitle(),
+            todoSaveRequest.getContents(),
+            weather,
+            user
         );
         Todo savedTodo = todoRepository.save(newTodo);
 
         return new TodoSaveResponse(
-                savedTodo.getId(),
-                savedTodo.getTitle(),
-                savedTodo.getContents(),
-                weather,
-                new UserResponse(user.getId(), user.getEmail())
+            savedTodo.getId(),
+            savedTodo.getTitle(),
+            savedTodo.getContents(),
+            weather,
+            new UserResponse(user.getId(), user.getEmail())
         );
     }
 
@@ -67,30 +68,35 @@ public class TodoService {
         );
 
         return todos.map(todo -> new TodoResponse(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getContents(),
-                todo.getWeather(),
-                new UserResponse(todo.getUser().getId(), todo.getUser().getEmail()),
-                todo.getCreatedAt(),
-                todo.getModifiedAt()
+            todo.getId(),
+            todo.getTitle(),
+            todo.getContents(),
+            todo.getWeather(),
+            new UserResponse(todo.getUser().getId(), todo.getUser().getEmail()),
+            todo.getCreatedAt(),
+            todo.getModifiedAt()
         ));
     }
 
     public TodoResponse getTodo(long todoId) {
         Todo todo = todoRepositoryQuery.findByIdWithUser(todoId)
-                .orElseThrow(() -> new InvalidRequestException("Todo not found"));
+            .orElseThrow(() -> new InvalidRequestException("Todo not found"));
 
         User user = todo.getUser();
 
         return new TodoResponse(
-                todo.getId(),
-                todo.getTitle(),
-                todo.getContents(),
-                todo.getWeather(),
-                new UserResponse(user.getId(), user.getEmail()),
-                todo.getCreatedAt(),
-                todo.getModifiedAt()
+            todo.getId(),
+            todo.getTitle(),
+            todo.getContents(),
+            todo.getWeather(),
+            new UserResponse(user.getId(), user.getEmail()),
+            todo.getCreatedAt(),
+            todo.getModifiedAt()
         );
+    }
+
+    public Page<TodoResponse> searchTodos(int page, int size, TodoFindCond cond) {
+        todoRepositoryQuery.searchTodos(PageRequest.of(page, size), cond);
+        return null;
     }
 }

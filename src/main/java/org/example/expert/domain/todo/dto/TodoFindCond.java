@@ -13,4 +13,11 @@ public class TodoFindCond {
     private String weather;
     private LocalDateTime startAt;
     private LocalDateTime endAt;
+    private String keyword;
+    private TYPE type;
+
+    public enum TYPE{
+        TITLE,
+        NICKNAME
+    }
 }

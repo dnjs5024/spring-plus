@@ -35,7 +35,6 @@ public class TodoController {
         @RequestParam(defaultValue = "10") int size,
         @ModelAttribute TodoFindCond cond
     ) {
-
         return ResponseEntity.ok(
             todoService.getTodos(
                 page, size,
@@ -50,4 +49,14 @@ public class TodoController {
     public ResponseEntity<TodoResponse> getTodo(@PathVariable long todoId) {
         return ResponseEntity.ok(todoService.getTodo(todoId));
     }
+
+    @GetMapping("/todos/search")
+    public ResponseEntity<Page<TodoResponse>> searchTodos(
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @ModelAttribute TodoFindCond cond
+    ){
+        return ResponseEntity.ok(todoService.searchTodos(page, size, cond));
+    }
+
 }
