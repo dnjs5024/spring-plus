@@ -4,7 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.expert.domain.user.dto.response.UserResponse;
+
 
 import static org.example.expert.domain.user.entity.QUser.user;
 
