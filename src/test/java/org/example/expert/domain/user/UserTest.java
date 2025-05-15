@@ -63,4 +63,6 @@ public class UserTest {
 
         System.out.println("유저 100만명 저장 완료");
     }
+
+
 }

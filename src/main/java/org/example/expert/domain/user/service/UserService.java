@@ -58,4 +58,14 @@ public class UserService {
     public List<UserSearchResponse> searchUsers(String name) {
         return userRepositoryQuery.searchUsers(name);
     }
+    public List<UserSearchResponse> searchUsersByJPAL(String name) {
+        return userRepository.findByUerNameJPQL(name).stream()
+            .map(user -> new UserSearchResponse(user.getId(),user.getEmail(),user.getUserName()))
+            .toList();
+    }
+    public List<UserSearchResponse> searchUsersByJPA(String name) {
+        return userRepository.findByUserName(name).stream()
+            .map(user -> new UserSearchResponse(user.getId(),user.getEmail(),user.getUserName()))
+            .toList();
+    }
 }

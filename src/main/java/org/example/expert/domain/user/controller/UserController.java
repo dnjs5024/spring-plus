@@ -10,6 +10,7 @@ import org.example.expert.domain.user.dto.UserFindCond;
 import org.example.expert.domain.user.dto.request.UserChangePasswordRequest;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.dto.response.UserSearchResponse;
+import org.example.expert.domain.user.entity.User;
 import org.example.expert.domain.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +38,17 @@ public class UserController {
         @ModelAttribute UserFindCond cond
     ){
         return ResponseEntity.ok(userService.searchUsers(cond.getName()));
+    }
+    @GetMapping("/users/search/v1")
+    public ResponseEntity<List<UserSearchResponse>> searchUsersByJPA(
+        @ModelAttribute UserFindCond cond
+    ){
+        return ResponseEntity.ok(userService.searchUsersByJPA(cond.getName()));
+    }
+    @GetMapping("/users/search/v2")
+    public ResponseEntity<List<UserSearchResponse>> searchUsersByJPQL(
+        @ModelAttribute UserFindCond cond
+    ){
+        return ResponseEntity.ok(userService.searchUsersByJPAL(cond.getName()));
     }
 }
